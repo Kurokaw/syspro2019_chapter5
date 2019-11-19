@@ -2,6 +2,7 @@
 
 from smbus2 import SMBus
 import time
+import datetime
 
 bus_number  = 1
 i2c_address = 0x76
