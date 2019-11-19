@@ -142,7 +142,7 @@ today = datetime.date.today()
 nowtime = "{0:%Y-%m-%d %H:%M:%S}".format(today)
 
 pdict = {}
-tempdict = {"time":nowtime, "temp"; , "pres": , "hum": }
+tempdict = {"time":nowtime, "temp": , "pres": , "hum": }
 pdict[idnum] = tempdict
 print(pdict)
 
