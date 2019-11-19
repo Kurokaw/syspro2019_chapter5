@@ -134,13 +134,14 @@ def setup():
 	writeReg(0xF4,ctrl_meas_reg)
 	writeReg(0xF5,config_reg)
 
-
-setup()
-get_calib_param()
-
-
-if __name__ == '__main__':
-	try:
-		readData()
-	except KeyboardInterrupt:
-		pass
+for i in range(5):
+	setup()
+	get_calib_param()
+	
+	
+	if __name__ == '__main__':
+		try:
+			readData()
+		except KeyboardInterrupt:
+			pass
+	time.sleep(10)
