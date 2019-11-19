@@ -142,11 +142,11 @@ today = datetime.date.today()
 nowtime = "{0:%Y-%m-%d %H:%M:%S}".format(today)
 
 pdict = {}
-tempdict = {"time":nowtime, "temp": , "pres": , "hum": }
+tempdict = {"time":nowtime, "temp":0 , "pres":0 , "hum":0}
 pdict[idnum] = tempdict
 print(pdict)
 
-for i in range(5):
+for i in range(1):
 	setup()
 	get_calib_param()
 	
