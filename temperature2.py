@@ -21,7 +21,7 @@ num = 0
 id = "id{}"
 
 pdict = {}
-//tempdict = {"time":nowtime, "temp":0 , "pres":0 , "hum":0}
+#tempdict = {"time":nowtime, "temp":0 , "pres":0 , "hum":0}
 
 
 def writeReg(reg_address, data):
