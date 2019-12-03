@@ -176,9 +176,6 @@ for i in range(2):
 	time.sleep(10)
 
 #JSONファイルで出力
-json_dict = json.load(pdict)
-print('json_dict:{}'.format(type(json_dict)))
-#JSON データの変換
-print('-----辞書型から JSON 形式の文字列へ変換-----')
+json_dict = json.dumps(pdict)
 f = open('test2.json', 'w')
 json.dump(json_dict, f)
