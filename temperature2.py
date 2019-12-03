@@ -153,7 +153,7 @@ def setup():
 	writeReg(0xF5,config_reg)
 
 
-for i in range(2):
+for i in range(5):
 	today = datetime.datetime.today()
 	nowtime = "{0:%Y-%m-%d %H:%M:%S}".format(today)
 	tempdict = {"time":nowtime}
@@ -177,5 +177,5 @@ for i in range(2):
 
 #JSONファイルで出力
 json_dict = json.dumps(pdict)
-f = open('test2.json', 'w')
+f = open('tempdata.json', 'w')
 json.dump(json_dict, f)
