@@ -16,8 +16,17 @@ digH = []
 t_fine = 0.0
 
 
+//辞書型の設定
+num = 0
+id = "id{}"
+
+pdict = {}
+//tempdict = {"time":nowtime, "temp":0 , "pres":0 , "hum":0}
+
+
 def writeReg(reg_address, data):
 	bus.write_byte_data(i2c_address,reg_address,data)
+
 
 def get_calib_param():
 	calib = []
@@ -27,7 +36,7 @@ def get_calib_param():
 	calib.append(bus.read_byte_data(i2c_address,0xA1))
 	for i in range (0xE1,0xE1+7):
 		calib.append(bus.read_byte_data(i2c_address,i))
-
+	
 	digT.append((calib[1] << 8) | calib[0])
 	digT.append((calib[3] << 8) | calib[2])
 	digT.append((calib[5] << 8) | calib[4])
@@ -50,14 +59,15 @@ def get_calib_param():
 	for i in range(1,2):
 		if digT[i] & 0x8000:
 			digT[i] = (-digT[i] ^ 0xFFFF) + 1
-
+	
 	for i in range(1,8):
 		if digP[i] & 0x8000:
 			digP[i] = (-digP[i] ^ 0xFFFF) + 1
-
+	
 	for i in range(0,6):
 		if digH[i] & 0x8000:
 			digH[i] = (-digH[i] ^ 0xFFFF) + 1  
+
 
 def readData():
 	data = []
@@ -70,6 +80,7 @@ def readData():
 	compensate_T(temp_raw)
 	compensate_P(pres_raw)
 	compensate_H(hum_raw)
+
 
 def compensate_P(adc_P):
 	global  t_fine
@@ -92,8 +103,10 @@ def compensate_P(adc_P):
 	v1 = (digP[8] * (((pressure / 8.0) * (pressure / 8.0)) / 8192.0)) / 4096
 	v2 = ((pressure / 4.0) * digP[7]) / 8192.0
 	pressure = pressure + ((v1 + v2 + digP[6]) / 16.0)  
-
+	
 	print "pressure : %7.2f hPa" % (pressure/100)
+	tempdict["pres"] = pressure/100
+
 
 def compensate_T(adc_T):
 	global t_fine
@@ -102,6 +115,8 @@ def compensate_T(adc_T):
 	t_fine = v1 + v2
 	temperature = t_fine / 5120.0
 	print "temp : %-6.2f ℃" % (temperature) 
+	tempdict["temp"] = temperature
+
 
 def compensate_H(adc_H):
 	global t_fine
@@ -116,6 +131,7 @@ def compensate_H(adc_H):
 	elif var_h < 0.0:
 		var_h = 0.0
 	print "hum : %6.2f ％" % (var_h)
+	tempdict["hum"] = var_h
 
 
 def setup():
@@ -126,28 +142,22 @@ def setup():
 	t_sb   = 5			#Tstandby 1000ms
 	filter = 0			#Filter off
 	spi3w_en = 0			#3-wire SPI Disable
-
+	
 	ctrl_meas_reg = (osrs_t << 5) | (osrs_p << 2) | mode
 	config_reg    = (t_sb << 5) | (filter << 2) | spi3w_en
 	ctrl_hum_reg  = osrs_h
-
+	
 	writeReg(0xF2,ctrl_hum_reg)
 	writeReg(0xF4,ctrl_meas_reg)
 	writeReg(0xF5,config_reg)
 
-num = 0
-id = "id{}"
-idnum = id.format(num)
 
-today = datetime.date.today()
-nowtime = "{0:%Y-%m-%d %H:%M:%S}".format(today)
-
-pdict = {}
-tempdict = {"time":nowtime, "temp":0 , "pres":0 , "hum":0}
-pdict[idnum] = tempdict
-print(pdict)
-
-for i in range(1):
+for i in range(2):
+	today = datetime.date.today()
+	nowtime = "{0:%Y-%m-%d %H:%M:%S}".format(today)
+	tempdict = {"time":nowtime}
+	
+	
 	setup()
 	get_calib_param()
 	
@@ -156,4 +166,10 @@ for i in range(1):
 			readData()
 		except KeyboardInterrupt:
 			pass
+	
+	idnum = id.format(num)
+	pdict[idnum] = tempdict
+	num = num + 1
+	
+	print(pdict)
 	time.sleep(10)
