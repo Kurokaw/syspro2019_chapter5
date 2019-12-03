@@ -3,6 +3,7 @@
 from smbus2 import SMBus
 import time
 import datetime
+import json
 
 bus_number  = 1
 i2c_address = 0x76
@@ -173,3 +174,11 @@ for i in range(2):
 	
 	print(pdict)
 	time.sleep(10)
+
+#JSONファイルで出力
+json_dict = json.load(pdict)
+print('json_dict:{}'.format(type(json_dict)))
+#JSON データの変換
+print('-----辞書型から JSON 形式の文字列へ変換-----')
+f = open('test2.json', 'w')
+json.dump(json_dict, f)
