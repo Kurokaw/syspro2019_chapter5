@@ -105,7 +105,7 @@ def compensate_P(adc_P):
 	pressure = pressure + ((v1 + v2 + digP[6]) / 16.0)  
 	
 	print "pressure : %7.2f hPa" % (pressure/100)
-	tempdict["pres"] = pressure/100
+	tempdict["pres"] = "%7.2f" % (pressure/100)
 
 
 def compensate_T(adc_T):
@@ -115,7 +115,7 @@ def compensate_T(adc_T):
 	t_fine = v1 + v2
 	temperature = t_fine / 5120.0
 	print "temp : %-6.2f ℃" % (temperature) 
-	tempdict["temp"] = temperature
+	tempdict["temp"] = "%-6.2f" % (temperature)
 
 
 def compensate_H(adc_H):
@@ -131,7 +131,7 @@ def compensate_H(adc_H):
 	elif var_h < 0.0:
 		var_h = 0.0
 	print "hum : %6.2f ％" % (var_h)
-	tempdict["hum"] = var_h
+	tempdict["hum"] = "%6.2f" % (var_h)
 
 
 def setup():
@@ -153,7 +153,7 @@ def setup():
 
 
 for i in range(2):
-	today = datetime.date.today()
+	today = datetime.datetime.today()
 	nowtime = "{0:%Y-%m-%d %H:%M:%S}".format(today)
 	tempdict = {"time":nowtime}
 	
